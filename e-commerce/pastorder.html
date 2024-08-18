@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Orders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .order-summary {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .order-summary h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .order-summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary-item img {
+            height: 80px;
+            width: 80px;
+            margin-right: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .order-summary-item .item-details {
+            flex-grow: 1;
+        }
+
+        .order-summary-item .item-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .order-summary-item .item-price,
+        .order-summary-item .item-delivery {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .remove-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .remove-button:hover {
+            background-color: #c82333;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1rem;
+        }
+
+        .back-to-home:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Past Orders</h1>
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div id="past-orders-content">
+            </div>
+        </div>
+        <a class="back-to-home" href="index.html">Back to Home</a>
+    </div>
+
+    <script>
+        function loadPastOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const pastOrdersContainer = document.getElementById('past-orders-content');
+            pastOrdersContainer.innerHTML = '';
+
+            if (orders.length === 0) {
+                pastOrdersContainer.innerHTML = '<p>No past orders found.</p>';
+                return;
+            }
+
+            orders.forEach((order, index) => {
+                let orderDetails = `
+                    <div class="order-summary-item" data-index="${index}">
+                        <div class="item-details">
+                            <p class="item-name">Order Date: ${order.date}</p>
+                            <br>
+                            <p class="item-price">Total Price: Rs ${order.totalPrice}</p>
+                            <p class="item-delivery">Delivery Address: ${order.address}</p>
+                            <p class="item-delivery">Phone Number: ${order.phone}</p>
+                            <p class="item-delivery">Payment Method: ${order.paymentMethod}</p>
+                            <br>
+                            <button class="remove-button" onclick="removeOrder(${index})">Remove</button>
+                        </div>
+                    </div>
+                `;
+
+             
+
+                pastOrdersContainer.innerHTML += orderDetails;
+            });
+        }
+
+        function removeOrder(index) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            if (index > -1 && index < orders.length) {
+                orders.splice(index, 1);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                loadPastOrders();
+            }
+        }
+
+        loadPastOrders();
+    </script>
+</body>
+</html>
+

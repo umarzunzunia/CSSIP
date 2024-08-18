@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    <div id="main">
+       
+        <div id="header">
+            <div id="logo">
+                <img src="https://th.bing.com/th/id/OIP.RIVS3MM8x6wsurFIIOq3VgHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+            </div>
+            <div id="deliver">
+                <main>
+                    <p>Deliver TO</p>
+                    <p id="current-country"><i class="ri-map-pin-2-fill"></i> India</p>
+                    <div class="dropdown">
+                        <a href="#" onclick="selectCountry('India')">India</a>
+                        <a href="#" onclick="selectCountry('USA')">USA</a>
+                        <a href="#" onclick="selectCountry('Canada')">Canada</a>
+                        <a href="#" onclick="selectCountry('Australia')">Australia</a>
+                        <a href="#" onclick="selectCountry('UK')">UK</a>
+                    </div>
+                </main>   
+            </div>
+            
+<script>
+   function selectCountry(country) {
+    document.getElementById('current-country').innerHTML = '<i class="ri-map-pin-2-fill"></i> ' + country;
+}
+
+
+
+</script>            
+<div id="search">
+    <form id="search1" onsubmit="return performSearch();">
+        <input id="ss" type="text" placeholder="Search..." name="search" oninput="showSuggestions()">
+        <button id="searchicon" type="submit">
+            <i class="ri-search-line"></i>
+        </button>
+        <div id="search-results"></div>
+    </form>
+</div>
+        <div id="icon">
+            <i id="aa" class="ri-search-line"></i>
+        </div>
+            
+        <div id="pastorder"><a href="pastorder.html">Previous Orders</a></div>
+        <a href="cart.html"> <div id="carts">
+            <i class="ri-shopping-cart-fill"></i>
+        </div>
+            <div id="t">Cart</a>
+            </div>
+        </div> <div id="listings">
+            <h2>Fashion Trends You Like</h2>
+            <div class="section">
+                <img src="https://m.media-amazon.com/images/I/61eKnVFvbmL._AC_SY550_.jpg" alt="Dokotoo Womens Summer Dresses" class="section-image" style="height: 200px;width: 270px;">
+                <div class="section-description">
+                    <h2>Dokotoo Womens Summer Dresses Square Neck Tie Back Lantern Sleeve Ruffle A-Line Casual Dress</h2>
+                    <h2>Rs 1599</h2>
+                    Delivery In 3 days.
+                    <br><br>
+                    <button class="add-to-cart-btn" data-name="Dokotoo Womens Summer Dresses" data-price="1599" data-image="https://m.media-amazon.com/images/I/61eKnVFvbmL._AC_SY550_.jpg">Add to Cart</button>
+                </div>
+            </div>
+        
+            <div class="section">
+                <img src="https://m.media-amazon.com/images/I/71l-nG38CvL._AC_SY741_.jpg" alt="Dokotoo Fall Sweaters" class="section-image" style="height: 210px;width: 270px;">
+                <div class="section-description">
+                    <h2>Dokotoo Fall Sweaters Round Neck Striped Cute Winter Pullover Sweaters for Women Trendy 2024 Drawstring</h2>
+                    <h2>Rs 1799</h2>
+                    Delivery In 3 days.
+                    <br><br>
+                    <button class="add-to-cart-btn" data-name="Dokotoo Fall Sweaters" data-price="1799" data-image="https://m.media-amazon.com/images/I/71l-nG38CvL._AC_SY741_.jpg">Add to Cart</button>
+                </div>
+            </div>
+        
+            <div class="section">
+                <img src="https://m.media-amazon.com/images/I/619y4UG0OFL._AC_SY741_.jpg" alt="CREATMO US Women's Trench Coat" class="section-image" style="height: 220px;width: 270px;">
+                <div class="section-description">
+                    <h2>CREATMO US Women's Trench Coat Double-Breasted Classic Lapel Overcoat Belted Slim Outerwear Coat with Detachable Hood</h2>
+                    <h2>Rs 1899</h2>
+                    Delivery In 3 days.
+                    <br><br>
+                    <button class="add-to-cart-btn" data-name="CREATMO US Women's Trench Coat" data-price="1899" data-image="https://m.media-amazon.com/images/I/619y4UG0OFL._AC_SY741_.jpg">Add to Cart</button>
+                </div>
+            </div>
+        
+            <div class="section">
+                <img src="https://m.media-amazon.com/images/I/81n4LrvOwnL._AC_SY675_.jpg" alt="Cleverfy Shower Steamers" class="section-image" style="height: 250px; width: 450px;">
+                <div class="section-description">
+                    <h2>Cleverfy Shower Steamers Aromatherapy - 18 Pack of Shower Bombs with Essential Oils. Personal Care and Relaxation Birthday Gifts for Women and Men. Purple Set</h2>
+                    <h2>Rs 999</h2>
+                    Delivery In 3 days.
+                    <br><br>
+                    <button class="add-to-cart-btn" data-name="Cleverfy Shower Steamers" data-price="999" data-image="https://m.media-amazon.com/images/I/81n4LrvOwnL._AC_SY675_.jpg">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification"></div>
+
+        <script>
+            document.querySelectorAll('.add-to-cart-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const item = {
+                        name: button.getAttribute('data-name'),
+                        price: button.getAttribute('data-price'),
+                        delivery: 'Delivery In 3 days.',
+                        image: button.getAttribute('data-image')
+                    };
+            
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart.push(item);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    showNotification(`"${item.name}" has been added to your cart.`);
+                });
+            });
+    
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.style.display = 'block';
+
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        </script>
+      
+            </div>
+    </div>
+  
+    
+</body>
+</html>

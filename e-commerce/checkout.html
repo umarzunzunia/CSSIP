@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .checkout-form {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .checkout-form input,.checkout-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .checkout-form .error {
+            color: #e60000;
+            font-size: 0.875rem;
+            margin-bottom: 10px;
+        }
+
+        .checkout-form button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-form button:hover {
+            background-color: #218838;
+        }
+
+        .order-summary {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .order-summary h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .order-summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary-item img {
+            height: 80px;
+            width: 80px;
+            margin-right: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .order-summary-item .item-details {
+            flex-grow: 1;
+        }
+
+        .order-summary-item .item-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .order-summary-item .item-price,.order-summary-item .item-delivery {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .back-to-cart {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1rem;
+        }
+
+        .back-to-cart:hover {
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .modal-content button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-content button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Checkout</h1>
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div id="summary-content">
+            </div>
+        </div>
+        <form id="checkout-form" class="checkout-form">
+            <div class="error" id="form-error"></div>
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Enter your address">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" placeholder="Enter your phone number">
+            <label for="payment-method">Payment Method</label>
+            <select id="payment-method" name="payment-method">
+                <option value="">Select Payment Method</option>
+                <option value="card">Credit/Debit Card</option>
+                <option value="cash">Cash on Delivery</option>
+            </select>
+            <div id="card-details" style="display: none;">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" name="card-number" placeholder="Enter your card number">
+                <label for="expiry-date">Expiry Date</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="Enter CVV">
+            </div>
+            <button type="submit">Place Order</button>
+        </form>
+        <a class="back-to-cart" href="cart.html">Back to Cart</a>
+    </div>
+
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <h2>Order Placed Successfully!</h2>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function updateOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const orderSummaryContainer = document.getElementById('summary-content');
+            orderSummaryContainer.innerHTML = '';
+
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const price = parseFloat(item.price) || 0;
+                totalPrice += price;
+
+                const itemSummary = `
+                    <div class="order-summary-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="item-details">
+                            <span class="item-name" style="float: left;">${item.name}</span>
+                            <span class="item-price" style="float: right;">Rs ${price.toFixed(2)}</span>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                `;
+                orderSummaryContainer.innerHTML += itemSummary;
+            });
+
+            const totalSummary = `
+                <p style="font-size: 1.5rem; font-weight: bold; color: #333;">Total Price: Rs ${totalPrice.toFixed(2)}</p>
+            `;
+            orderSummaryContainer.innerHTML += totalSummary;
+        }
+
+        function saveOrder() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = {
+                date: new Date().toLocaleDateString(),
+                totalPrice: calculateTotalPrice(),
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                paymentMethod: document.getElementById('payment-method').value,
+                items: JSON.parse(localStorage.getItem('cart')) || []
+            };
+
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        function calculateTotalPrice() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            return cart.reduce((total, item) => total + parseFloat(item.price), 0);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const errorElement = document.getElementById('form-error');
+            errorElement.innerHTML = '';
+
+            if (!document.getElementById('address').value) {
+                errorElement.innerHTML += '<p>Address is required.</p>';
+                isValid = false;
+            }
+
+            if (!document.getElementById('phone').value) {
+                errorElement.innerHTML += '<p>Phone number is required.</p>';
+                isValid = false;
+            }
+
+            const paymentMethod = document.getElementById('payment-method').value;
+            if (!paymentMethod) {
+                errorElement.innerHTML += '<p>Payment method is required.</p>';
+                isValid = false;
+            } else if (paymentMethod === 'card') {
+                if (!document.getElementById('card-number').value ||
+                    !document.getElementById('expiry-date').value ||
+                    !document.getElementById('cvv').value) {
+                    errorElement.innerHTML += '<p>All card details are required.</p>';
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function showModal() {
+            document.getElementById('success-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+            window.location.href = 'index.html'; 
+        }
+
+        document.getElementById('checkout-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (validateForm()) {
+                saveOrder();
+                showModal();
+                localStorage.removeItem('cart');
+            }
+        });
+
+        document.getElementById('payment-method').addEventListener('change', function() {
+            const cardDetails = document.getElementById('card-details');
+            cardDetails.style.display = this.value === 'card' ? 'block' : 'none';
+        });
+
+        updateOrderSummary();
+    </script>
+</body>
+</html>

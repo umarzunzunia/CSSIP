@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cart, .order-summary {
+            width: 100%;
+            max-width: 1000px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cart li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s;
+        }
+
+        .cart li:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-image {
+            height: 80px;
+            width: 80px;
+            margin-right: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .item-price, .item-delivery {
+            display: block;
+            font-size: 1rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .remove-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .remove-button:hover {
+            background-color: #e60000;
+        }
+
+        .order-summary p {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .back-to-shop, .checkout-button {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .back-to-shop {
+            background-color: #007bff;
+        }
+
+        .back-to-shop:hover {
+            background-color: #0056b3;
+        }
+
+        .checkout-button {
+            background-color: #28a745;
+            margin-top: 20px;
+        }
+
+        .checkout-button.disabled {
+            background-color: #6c757d;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .checkout-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cart</h1>
+        <div id="cart" class="cart">
+            <h2>Cart Items</h2>
+            <ul id="cart-items">
+            </ul>
+        </div>
+        <div id="order-summary" class="order-summary">
+            <h2>Order Summary</h2>
+            <div id="summary-content">
+            </div>
+            <a id="checkout-link" class="checkout-button" href="checkout.html">Checkout</a>
+        </div>
+        <a class="back-to-shop" href="index.html">Back to Shop</a>
+    </div>
+
+    <script>
+        function updateCartDisplay() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById('cart-items');
+            const orderSummaryContainer = document.getElementById('summary-content');
+            const checkoutLink = document.getElementById('checkout-link');
+            cartItemsContainer.innerHTML = '';
+            orderSummaryContainer.innerHTML = '';
+
+            let totalPrice = 0;
+
+            cart.forEach((item, index) => {
+                const price = parseFloat(item.price) || 0;
+                totalPrice += price;
+
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="item-image">
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">Rs ${price.toFixed(2)}</span>
+                        </div>
+                    <button class="remove-button" onclick="removeFromCart(${index})">Remove</button>
+                `;
+                cartItemsContainer.appendChild(listItem);
+            });
+
+            const orderSummary = `
+                <p>Total Price: Rs ${totalPrice.toFixed(2)}</p>
+            `;
+            orderSummaryContainer.innerHTML = orderSummary;
+
+            if (cart.length === 0) {
+                checkoutLink.classList.add('disabled');
+                checkoutLink.href = '#'; 
+            } else {
+                checkoutLink.classList.remove('disabled');
+                checkoutLink.href = 'checkout.html'; 
+            }
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        updateCartDisplay();
+    </script>
+</body>
+</html>
